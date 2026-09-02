@@ -126,33 +126,8 @@ head(bgc_data_afsr_like_set)
 
 
 ######Check for overlap in these. 
+#AfsR-like protein complete within the flanking region. 
 
-# Approach one: any overlap.
-
-gene_region_status <- afsr_like_with_coordinates %>%
-  left_join(
-    bgc_data_afsr_like_set,
-    by = c("sequence_id" = "NCBI.accession"),
-    relationship = "many-to-many"
-  ) %>%
-  mutate(
-    overlaps = start <= Twenty_kb_flank_end &
-      end >= Twenty_kb_flank_start
-  ) %>%
-  group_by(protein) %>%
-  summarise(
-    inside_region = any(overlaps),
-    .groups = "drop"
-  ) %>%
-  right_join(afsr_like_with_coordinates, by = "protein")
-
-table(gene_region_status$inside_region)
-#FALSE  TRUE 
-#1806  1383 
-1383/(1383+1806)
-#43.37%
-
-#Approach two - AfsR-like protein complete within the flanking region. 
 completely_inside <- afsr_like_with_coordinates %>%
   left_join(
     bgc_data_afsr_like_set,
@@ -178,32 +153,3 @@ table(completely_inside$inside_region)
 1333/(1333+1867)
 #0.4165625
 #41.66%
-
-
-######### Testing old system
-afsr_like_with_coordinates_test <- afsr_like_with_coordinates
-afsr_like_with_coordinates_test$in_region <- FALSE
-match_count <- 0
-
-for (i in seq_len(nrow(bgc_data_afsr_like_set))) {
-  
-  new_matches <- (
-    afsr_like_with_coordinates_test$sequence_id == bgc_data_afsr_like_set$NCBI.accession[i] &
-      afsr_like_with_coordinates_test$start >= bgc_data_afsr_like_set$Twenty_kb_flank_start[i] &
-      afsr_like_with_coordinates_test$end   <= bgc_data_afsr_like_set$Twenty_kb_flank_end[i]
-  )
-  
-  match_count <- match_count + sum(new_matches)
-  
-  afsr_like_with_coordinates_test$in_region <- afsr_like_with_coordinates_test$in_region | new_matches
-}
-
-
-table(afsr_like_with_coordinates_test$in_region)
-
-#FALSE  TRUE 
-#1867  1333 
-#Percentage inside: 
-#0.4165625
-#41.66%
-#Same outcome. 
