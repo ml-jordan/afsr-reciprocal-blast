@@ -28,7 +28,7 @@ The analysis was performed using the following versions:
 - 10_AfsR_like_BGC_localisation.R: R script used to process the AfsR-like proteins to look for whether they are encoded within, or close to biosynthetic gene clusters (BGCs) predicted in the antiSMASH database. Requires some of the subsequent scripts at various points.
 - 11_mapping_afsr_like_locus_tag.py: Takes the AfsR-like proteins and adds the locus_tag onto the proteins from the GenBank assemblies.
 - 12_adding_afsr_like_coordinates.py: Takes the AfsR-like protein, adds the coordinates of the genes to enable matching with the BGCs.
-- 14_trimming_MHD_motif.py: Python script to trim an aligned fasta for the MHD motif. 
+- 13_trimming_MHD_motif.py: Python script to trim an aligned fasta for the MHD motif. 
 
 
 # Required files:
